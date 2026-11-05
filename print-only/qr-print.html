@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gurukul Academy - 30 Scratch & Win QR Codes</title>
+<style>
+body{font-family:Arial,sans-serif;margin:18px;color:#222}
+h1{text-align:center;color:#40145f}p{text-align:center}
+.actions{text-align:center;margin:16px}
+button{padding:10px 18px;font-size:16px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.item{border:1px solid #aaa;border-radius:8px;padding:10px;text-align:center;break-inside:avoid}
+.qr{display:flex;justify-content:center;min-height:150px}
+.num{font-weight:bold;margin-top:5px}
+@media print{.actions{display:none}body{margin:8mm}.grid{gap:8px}.item{padding:6px}}
+</style></head><body>
+<h1>GURUKUL ACADEMY</h1><p>DIWALI SCRATCH &amp; WIN — OFFICIAL QR CODES</p>
+<div class="actions"><button onclick="window.print()">Print QR Codes</button></div>
+<div class="grid" id="grid"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const entries = [{"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=be36cb56adc90ebde623dd3a", "number": 1}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=5fde3469ba76e930a4405ed4", "number": 2}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=1b0cd084cebb2d6df9633a41", "number": 3}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=88229ab99de81787031fa794", "number": 4}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=eb22d769685667990bb88b84", "number": 5}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=d9167e86bf87c97736e30407", "number": 6}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=1d3aef410fb4ae825ea9af41", "number": 7}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=a853cb8f8c922854e45c494a", "number": 8}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=49facf7af27ca1bdfcc58abc", "number": 9}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=ee0e097c17f6410c0d2d74be", "number": 10}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=0cfb2a65edcfd6238a98b63f", "number": 11}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=95955b0c0e09ae0d05689707", "number": 12}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=0d12442c285578fc5f862adb", "number": 13}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=bc039b433943722288d38bfe", "number": 14}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=9ffc5391597373bf0c7d2b18", "number": 15}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=f2f013c892f0da1ee3d529b6", "number": 16}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=238bbccfb2e95d2989f5d5f4", "number": 17}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=1e1bb555441a266b242fc39d", "number": 18}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=4c62ca350bc62fc2f779f51a", "number": 19}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=c46725a39372fe32da231aa8", "number": 20}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=bad45fc0d0e4f809561328b5", "number": 21}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=84fe7d5541484b751adf142e", "number": 22}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=67a3a755375fc043a0c25687", "number": 23}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=926b4e7ce61ea7a988709c79", "number": 24}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=99d0cd46a72be34332c1bbc0", "number": 25}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=0d2195c78201cb22c941c34c", "number": 26}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=13db75b98a78a060d8b75e63", "number": 27}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=d138f8a8864862dfbce20c96", "number": 28}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=a01d931dbce5fe4702da6ab6", "number": 29}, {"url": "https://bejewelled-manatee-bf86c1.netlify.app/?token=36b79081df597c7231db17a8", "number": 30}];
+const grid=document.getElementById("grid");
+entries.forEach((entry)=>{
+ const box=document.createElement("div");box.className="item";
+ const qr=document.createElement("div");qr.className="qr";
+ box.appendChild(qr);
+ const label=document.createElement("div");label.className="num";label.textContent="QR CODE "+String(entry.number).padStart(2,"0");
+ box.appendChild(label);grid.appendChild(box);
+ new QRCode(qr,{text:entry.url,width:140,height:140,correctLevel:QRCode.CorrectLevel.M});
+});
+</script></body></html>
