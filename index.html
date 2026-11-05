@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gurukul Academy | Diwali Scratch & Win</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Georgia,serif;color:#fff;background:radial-gradient(circle at top,#482080,#160b35 65%,#09051b);display:flex;align-items:center;justify-content:center;padding:18px}
+.card{width:min(100%,470px);text-align:center;border:3px solid #e7b94e;border-radius:28px;padding:22px 16px 26px;background:linear-gradient(145deg,#35104fdd,#150a32f2);box-shadow:0 0 35px #f6c85a66}
+.brand{font:bold 19px Arial,sans-serif;letter-spacing:2px;color:#ffe7a0}.presents{font-style:italic;color:#f8d98b;margin:4px 0 16px}
+h1{margin:4px 0 8px;font:900 clamp(34px,10vw,54px)/1 Arial,sans-serif;letter-spacing:1px;color:#ffd65b;text-shadow:2px 4px #8a260d,0 0 16px #ffbd32}
+.sub{font-size:18px;color:#ffe6a1;margin-bottom:20px}
+.panel{position:relative;height:270px;max-width:390px;margin:0 auto;border:4px solid #f6ce68;border-radius:20px;overflow:hidden;background:linear-gradient(135deg,#fff0b7,#f4c44f 45%,#fff1bc);display:flex;align-items:center;justify-content:center}
+.prize{color:#8b160e;font:bold clamp(24px,7vw,40px) Arial,sans-serif;text-shadow:0 2px #fff;padding:12px}
+.prize small{display:block;font-size:16px;margin-top:10px}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.instruction{color:#ffe9b1;font:16px Arial,sans-serif;margin:16px 0 10px}
+.footer{font:14px Arial,sans-serif;color:#f7d990;margin-top:20px}
+.spark{font-size:23px;margin:6px}
+#status{font:bold 16px Arial,sans-serif;color:#ffedb0;min-height:42px;margin-top:8px}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="spark">🪔 ✨ 🪔 ✨ 🪔</div>
+  <div class="brand">GURUKUL ACADEMY</div>
+  <div class="presents">Presents</div>
+  <h1>SCRATCH &amp; WIN</h1>
+  <div class="sub">This Diwali, Your Surprise Awaits!</div>
+  <section class="panel" aria-label="Scratch to reveal your prize">
+    <div class="prize" id="prize">YOUR SURPRISE<small>SCRATCH TO REVEAL</small></div>
+    <canvas id="cover"></canvas>
+  </section>
+  <div class="instruction">☝️ Rub the golden card to reveal your prize!</div>
+  <div id="status">Your Diwali surprise is waiting…</div>
+  <div class="footer">🎁 May your Diwali be filled with joy and light! 🎁</div>
+</main>
+<script>
+const params = new URLSearchParams(location.search);
+const token = params.get("token") || "";
+const prizeEl = document.getElementById("prize");
+const statusEl = document.getElementById("status");
+const canvas = document.getElementById("cover");
+const ctx = canvas.getContext("2d");
+let drawing = false, scratched = 0, claiming = false, claimed = false;
+
+function setup(){
+  const r=canvas.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+  canvas.width=r.width*dpr; canvas.height=r.height*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const g=ctx.createLinearGradient(0,0,r.width,r.height);
+  g.addColorStop(0,"#c9a23a");g.addColorStop(.45,"#fff0a6");g.addColorStop(1,"#b98520");
+  ctx.globalCompositeOperation="source-over";
+  ctx.fillStyle=g;ctx.fillRect(0,0,r.width,r.height);
+  ctx.fillStyle="#71440c";ctx.font="bold 27px Georgia";ctx.textAlign="center";
+  ctx.fillText("✨ SCRATCH HERE ✨",r.width/2,r.height/2-4);
+  ctx.font="17px Arial";ctx.fillText("Reveal your Diwali surprise",r.width/2,r.height/2+28);
+}
+setup(); window.addEventListener("resize",setup);
+
+function pos(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+async function reveal(){
+  if (claiming || claimed) return;
+  claiming = true;
+  statusEl.textContent = "Checking your QR code…";
+  try {
+    const response = await fetch("/api/redeem", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({token})
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      statusEl.textContent = data.error || "This QR code cannot be used.";
+      canvas.style.display = "none";
+      return;
+    }
+    claimed = true;
+    prizeEl.innerHTML = data.prize + (data.prize.includes("BETTER") ?
+      "<small>KEEP SMILING!</small>" : "<small>CONGRATULATIONS! YOU WON!</small>");
+    statusEl.textContent = "🎉 Your result is confirmed!";
+    canvas.style.display = "none";
+  } catch (err) {
+    statusEl.textContent = "Connection problem. Please try again with internet.";
+  } finally {
+    claiming = false;
+  }
+}
+function scratch(e){
+  if(!drawing || claiming || claimed) return;
+  const p=pos(e);
+  ctx.globalCompositeOperation="destination-out";
+  ctx.beginPath();ctx.arc(p.x,p.y,23,0,Math.PI*2);ctx.fill();
+  scratched++;
+  if(scratched>=22){drawing=false; reveal();}
+}
+canvas.addEventListener("pointerdown",e=>{if(claiming||claimed)return;drawing=true;canvas.setPointerCapture(e.pointerId);scratch(e)});
+canvas.addEventListener("pointermove",scratch);
+canvas.addEventListener("pointerup",()=>drawing=false);
+canvas.addEventListener("pointercancel",()=>drawing=false);
+if(!token){statusEl.textContent="Invalid QR code. Please scan the original QR code.";canvas.style.display="none";}
+</script>
+</body>
+</html>
